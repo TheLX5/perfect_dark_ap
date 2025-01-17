@@ -1,4 +1,5 @@
 #include <ultra64.h>
+#include "system.h"
 #include "constants.h"
 #include "game/cheats.h"
 #include "game/bondgun.h"
@@ -359,7 +360,19 @@ bool invHasDoubleWeaponIncAllGuns(s32 weapon1, s32 weapon2)
 
 bool invGiveSingleWeapon(s32 weaponnum)
 {
+	//sysLogPrintf(LOG_NOTE, "Weapon ID %d pre status: %d", weaponnum, frIsWeaponFound(weaponnum));
+
 	frSetWeaponFound(weaponnum);
+
+	//sysLogPrintf(LOG_NOTE, "Weapon ID %d new status: %d", weaponnum, frIsWeaponFound(weaponnum));
+
+	sysLogPrintf(LOG_NOTE, "g_GameFile %p", &g_GameFile);
+	sysLogPrintf(LOG_NOTE, "g_GameFile.weaponsfound %p", &g_GameFile.weaponsfound);
+
+	if (!(frIsWeaponFound(weaponnum))) {
+		return false;
+	}
+
 
 	if (invHasSingleWeaponExcAllGuns(weaponnum) == 0) {
 		struct invitem *item;
@@ -387,6 +400,12 @@ bool invGiveSingleWeapon(s32 weaponnum)
 
 bool invGiveDoubleWeapon(s32 weapon1, s32 weapon2)
 {
+	if (!(frIsWeaponFound(weapon1))) {
+		return false;
+	}
+	if (!(frIsWeaponFound(weapon2))) {
+		return false;
+	}
 	if (invHasDoubleWeaponExcAllGuns(weapon1, weapon2) == 0) {
 		if (weaponHasFlag(weapon1, WEAPONFLAG_DUALWIELD)) {
 			struct invitem *item = invFindUnusedSlot();

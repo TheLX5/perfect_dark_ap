@@ -172,7 +172,6 @@ void frSetWeaponFound(s32 weaponnum)
 	if (weaponnum < (s32)sizeof(g_GameFile.weaponsfound) * 8) {
 		u32 byteindex = weaponnum >> 3;
 		u32 value = g_GameFile.weaponsfound[byteindex];
-
 		value |= (1 << (weaponnum % 8));
 
 		g_GameFile.weaponsfound[byteindex] = value;
@@ -218,9 +217,9 @@ bool frIsWeaponAvailable(s32 weapon)
 		return false;
 	}
 
-	if (weapon == WEAPON_FALCON2 || weapon == WEAPON_CMP150) {
-		return true;
-	}
+	//if (weapon == WEAPON_FALCON2 || weapon == WEAPON_CMP150) {
+	//	return true;
+	//}
 
 #if VERSION < VERSION_NTSC_1_0
 #ifdef DEBUG

@@ -181,13 +181,19 @@ void playerReset(void)
 				break;
 			case INTROCMD_WEAPON:
 				if (cmd->param3 == 0 && g_Vars.currentplayer != g_Vars.anti) {
-					modelmgrLoadProjectileModeldefs(cmd->param1);
 
 					if (cmd->param2 >= 0) {
-						modelmgrLoadProjectileModeldefs(cmd->param2);
 						invGiveDoubleWeapon(cmd->param1, cmd->param2);
+						modelmgrLoadProjectileModeldefs(cmd->param1);
+						modelmgrLoadProjectileModeldefs(cmd->param2);
 					} else {
-						invGiveSingleWeapon(cmd->param1);
+						if (invGiveSingleWeapon(cmd->param1)) {
+							modelmgrLoadProjectileModeldefs(cmd->param1);
+						} else {
+							cmd = (struct cmd32 *)((uintptr_t)cmd + 16);
+							break;
+						}
+						
 					}
 
 					if (!hasdefaultweapon) {
