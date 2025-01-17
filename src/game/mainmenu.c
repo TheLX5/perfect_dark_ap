@@ -973,11 +973,13 @@ struct menudialogdef g_PdModeSettingsMenuDialog = {
  */
 bool isStageDifficultyUnlocked(s32 stageindex, s32 difficulty)
 {
+	return true;
+	/*
 	s32 s;
 	s32 d;
 
 	// Handle special missions
-	if (stageindex > SOLOSTAGEINDEX_SKEDARRUINS) {
+	//if (stageindex > SOLOSTAGEINDEX_SKEDARRUINS) {
 #if VERSION >= VERSION_NTSC_1_0
 		// If the player has completed Skedar Ruins on the same difficulty as
 		// the one that's being queried, then they have access to this
@@ -987,7 +989,7 @@ bool isStageDifficultyUnlocked(s32 stageindex, s32 difficulty)
 
 		for (d = DIFF_A; d <= DIFF_PA; d++) {
 			if (g_GameFile.besttimes[SOLOSTAGEINDEX_SKEDARRUINS][d] != 0) {
-				maxcompleteddiff = d;
+				maxcompleteddiff = 3;
 			}
 		}
 
@@ -998,17 +1000,21 @@ bool isStageDifficultyUnlocked(s32 stageindex, s32 difficulty)
 
 		// Otherwise, grant them the difficulty if they've completed all prior
 		// difficulties on this stage.
-		for (d = DIFF_A; d < difficulty; d++) {
-			if (g_GameFile.besttimes[stageindex][d] == 0) {
-				return false;
-			}
-		}
+	//	for (d = DIFF_A; d < difficulty; d++) {
+	//		if (g_GameFile.besttimes[stageindex][d] == 0) {
+	//			return false;
+	//		}
+	//	}
 
-		return true;
-	}
+	//	return true;
+	//}
 
 	// Handle normal missions
-	if (stageindex <= SOLOSTAGEINDEX_SKEDARRUINS && difficulty <= DIFF_PA) {
+	if (stageindex <= SOLOSTAGEINDEX_DUEL && difficulty <= DIFF_PA) {
+		
+	}
+		
+
 		// Defection is always unlocked on all difficulties
 		if (g_SoloStages[stageindex].stagenum == STAGE_DEFECTION) {
 			return true;
@@ -1106,9 +1112,10 @@ bool isStageDifficultyUnlocked(s32 stageindex, s32 difficulty)
 					}
 				}
 			}
+			
 		}
 	}
-
+	*/
 	return false;
 }
 
@@ -1157,9 +1164,9 @@ MenuItemHandlerResult menuhandlerPdMode(s32 operation, struct menuitem *item, un
 		menuPushDialog(&g_PdModeSettingsMenuDialog);
 		break;
 	case MENUOP_CHECKHIDDEN:
-		if (g_GameFile.besttimes[SOLOSTAGEINDEX_SKEDARRUINS][DIFF_PA] == 0) {
+		//if (g_GameFile.besttimes[SOLOSTAGEINDEX_SKEDARRUINS][DIFF_PA] == 0) {
 			return true;
-		}
+		//}
 	}
 
 	return 0;
@@ -1778,6 +1785,8 @@ struct solostage g_SoloStages[NUM_SOLOSTAGES] = {
 
 s32 getNumUnlockedSpecialStages(void)
 {
+	return 4;
+	/*
 	s32 count = 0;
 	s32 offsetforduel = 1;
 	s32 i;
@@ -1799,6 +1808,7 @@ s32 getNumUnlockedSpecialStages(void)
 	}
 
 	return count + offsetforduel;
+	*/
 }
 
 s32 func0f104720(s32 value)
@@ -1806,17 +1816,17 @@ s32 func0f104720(s32 value)
 	s32 next = 0;
 	s32 d;
 
-	for (d = 0; d < ARRAYCOUNT(g_GameFile.besttimes[0]); d++) {
+	/*for (d = 0; d < ARRAYCOUNT(g_GameFile.besttimes[0]); d++) {
 		if (g_GameFile.besttimes[SOLOSTAGEINDEX_SKEDARRUINS][d]) {
 			next = d + 1;
 		}
-	}
+	}*/
 
-	if (next > value) {
+	//if (next > value) {
 		return 17 + value;
-	}
+	//}
 
-	return 20;
+	//return 20;
 }
 
 MenuItemHandlerResult menuhandlerMissionList(s32 operation, struct menuitem *item, union handlerdata *data)
@@ -1861,8 +1871,10 @@ MenuItemHandlerResult menuhandlerMissionList(s32 operation, struct menuitem *ite
 		data->list.value = 0;
 
 		for (i = 0; i <= SOLOSTAGEINDEX_SKEDARRUINS; i++) {
-			stageiscomplete = false;
+			data->list.value++;
 
+			/*
+			stageiscomplete = false;
 			for (j = 0; j < ARRAYCOUNT(g_GameFile.besttimes[i]); j++) {
 				if (g_GameFile.besttimes[i][j] != 0) {
 					stageiscomplete = true;
@@ -1874,11 +1886,10 @@ MenuItemHandlerResult menuhandlerMissionList(s32 operation, struct menuitem *ite
 				}
 			}
 
-			data->list.value++;
 
 			if (!stageiscomplete) {
 				break;
-			}
+			}*/
 		}
 
 		data->list.value += getNumUnlockedSpecialStages();
@@ -1910,6 +1921,11 @@ MenuItemHandlerResult menuhandlerMissionList(s32 operation, struct menuitem *ite
 		g_Vars.normmplayerisrunning = false;
 		g_MissionConfig.stagenum = g_SoloStages[sp188].stagenum;
 		g_MissionConfig.stageindex = sp188;
+
+		if (!g_GameFile.unlockedstages[g_MissionConfig.stagenum]) {
+			sndStart(var80095200, SFX_MENU_ERROR, 0, -1, -1, -1, -1, -1);
+			break;
+		}
 
 		if (g_MissionConfig.iscoop) {
 			menuPushDialog(&g_CoopMissionDifficultyMenuDialog);
@@ -4808,11 +4824,11 @@ MenuItemHandlerResult menuhandlerMainMenuSoloMissions(s32 operation, struct menu
 		menuPushDialog(&g_SelectMissionMenuDialog);
 	}
 
-	if (operation == MENUOP_CHECKPREFOCUSED) {
-		if (isStageDifficultyUnlocked(SOLOSTAGEINDEX_INVESTIGATION, DIFF_A)) {
-			return true;
-		}
-	}
+	//if (operation == MENUOP_CHECKPREFOCUSED) {
+	//	if (isStageDifficultyUnlocked(SOLOSTAGEINDEX_INVESTIGATION, DIFF_A)) {
+	//		return true;
+	//	}
+	//}
 
 	return 0;
 }
