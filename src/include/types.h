@@ -4003,6 +4003,12 @@ struct gamefile {
 	/*0xa0*/ s32 coopcompletions[3]; // indexed by difficulty
 	/*0xac*/ u8 firingrangescores[9];
 	/*0xb5*/ u8 weaponsfound[6];
+	/*0xb5*/ u8 unlockedstages[NUM_SOLOSTAGES];
+	/*0xb5*/ u16 received_index;
+	/*0xb5*/ u8 alt_fire;
+	/*0xb5*/ u8 akimbo_weapons;
+	/*0xb5*/ u8 progressive_shields;
+	/*0xb5*/ u8 starting_ammo;
 };
 
 struct mpchrconfig {
