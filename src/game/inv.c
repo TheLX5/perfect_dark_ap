@@ -362,7 +362,7 @@ bool invGiveSingleWeapon(s32 weaponnum)
 {
 	//sysLogPrintf(LOG_NOTE, "Weapon ID %d pre status: %d", weaponnum, frIsWeaponFound(weaponnum));
 
-	frSetWeaponFound(weaponnum);
+	//frSetWeaponFound(weaponnum);
 
 	//sysLogPrintf(LOG_NOTE, "Weapon ID %d new status: %d", weaponnum, frIsWeaponFound(weaponnum));
 
